@@ -1,3 +1,6 @@
+//For some reason rustc thinks some structs are never used
+#![allow(dead_code)]
+
 extern crate ncurses;
 
 use ncurses::*;
@@ -19,9 +22,9 @@ impl Snake {
     pub fn new(cell_count: i32) -> Snake {
         let mut s = Snake{ cells_x: Vec::new(), cells_y: Vec::new() };
         let mut x = 10;
-        let mut y = 5;
+        let y = 5;
 
-        for i in 0..cell_count{
+        for _ in 0..cell_count{
             s.cells_x.push(x);
             s.cells_y.push(y);
             x -= 1;
@@ -52,8 +55,7 @@ impl Snake {
             Direction::East => self.cells_x[0] += 1,
             Direction::West => self.cells_x[0] -= 1,
             Direction::North => self.cells_y[0] -= 1,
-            Direction::South => self.cells_y[0] += 1,
-            _ => panic!("Wrong direction supplied")
+            Direction::South => self.cells_y[0] += 1
         }
     }
 }

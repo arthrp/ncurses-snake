@@ -1,3 +1,5 @@
+#![allow(unused_parens)]
+
 extern crate ncurses;
 
 #[path = "other.rs"]
