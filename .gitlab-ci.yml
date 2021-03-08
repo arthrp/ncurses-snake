@@ -1,0 +1,12 @@
+image: 1.50-buster
+
+stages:
+    - build
+
+before_script:
+    - apt-get install libncurses5-dev libncursesw5-dev
+
+build:
+    stage: build
+    script:
+        - cargo build --release
