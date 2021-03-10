@@ -13,6 +13,7 @@ pub struct GameManager {
     is_finished: bool,
     pub direction: Direction,
     snake: Snake,
+    apple: Apple,
     max_x: i32,
     max_y: i32    
 }
@@ -22,7 +23,7 @@ impl GameManager {
         clear();
         self.snake.draw();
         self.snake.make_move(&self.direction);
-
+        mvprintw(self.apple.y, self.apple.x, "*");
         refresh();
 
         if(self.check_collision()){
@@ -31,7 +32,8 @@ impl GameManager {
     }
 
     pub fn new(max_x: &i32, max_y: &i32) -> GameManager {
-        return GameManager{ is_finished: false, direction: Direction::East, snake: Snake::new(3), max_x: max_x.clone(), max_y: max_y.clone() };
+        let apple = Apple::new(max_x, max_y);
+        return GameManager{ is_finished: false, direction: Direction::East, snake: Snake::new(3), apple: apple, max_x: max_x.clone(), max_y: max_y.clone() };
     }
 
     pub fn run_game_loop(&mut self) -> () {
@@ -93,7 +95,7 @@ impl GameManager {
                 _ => return
             }
 
-            self.print_centered("Game over");
+            self.print_centered(&format!("Game over {}", self.max_x).to_string());
         }
     }
 }

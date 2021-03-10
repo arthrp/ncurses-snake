@@ -2,8 +2,10 @@
 #![allow(dead_code)]
 
 extern crate ncurses;
+extern crate rand;
 
 use ncurses::*;
+use rand::{thread_rng, Rng};
 
 #[derive(PartialEq)]
 pub enum Direction {
@@ -57,5 +59,21 @@ impl Snake {
             Direction::North => self.cells_y[0] -= 1,
             Direction::South => self.cells_y[0] += 1
         }
+    }
+}
+
+pub struct Apple {
+    pub x: i32,
+    pub y: i32
+}
+
+impl Apple {
+    pub fn new(max_x: &i32, max_y: &i32) -> Apple {
+        let mut rng = thread_rng();
+
+        let x = rng.gen_range(0..*max_x);
+        let y = rng.gen_range(0..*max_y);
+
+        return Apple { x: x, y: y};
     }
 }
