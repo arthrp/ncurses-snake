@@ -17,12 +17,13 @@ pub enum Direction {
 
 pub struct Snake {
     pub cells_x: Vec<i32>,
-    pub cells_y: Vec<i32>
+    pub cells_y: Vec<i32>,
+    pub cell_count: i32
 }
 
 impl Snake {
     pub fn new(cell_count: i32) -> Snake {
-        let mut s = Snake{ cells_x: Vec::new(), cells_y: Vec::new() };
+        let mut s = Snake{ cells_x: Vec::new(), cells_y: Vec::new(), cell_count: cell_count };
         let mut x = 10;
         let y = 5;
 
@@ -35,18 +36,14 @@ impl Snake {
     }
 
     pub fn draw(&self){
-        let cell_count = *&self.cells_x.len() as i32;
-
-        for i in 0..cell_count {
+        for i in 0..self.cell_count {
             mvprintw(self.cells_y[i as usize], self.cells_x[i as usize], "O");
         }
     }
 
     pub fn make_move(&mut self, dir: &Direction) -> () {
-        let cell_count = *&self.cells_x.len() as i32;
-
         //Move body
-        for i in (1..cell_count).rev() {
+        for i in (1..self.cell_count).rev() {
             let ii = i as usize;
             self.cells_x[ii] = self.cells_x[ii-1];
             self.cells_y[ii] = self.cells_y[ii-1];
@@ -59,6 +56,12 @@ impl Snake {
             Direction::North => self.cells_y[0] -= 1,
             Direction::South => self.cells_y[0] += 1
         }
+    }
+
+    pub fn add_cell(&mut self) -> () {
+        self.cell_count += 1;
+        self.cells_x.push(self.cells_x[(self.cell_count -2) as usize]);
+        self.cells_y.push(self.cells_y[(self.cell_count -2) as usize]);
     }
 }
 

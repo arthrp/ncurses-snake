@@ -22,9 +22,11 @@ impl GameManager {
     pub fn run(&mut self) -> () {
         clear();
         self.snake.draw();
-        self.snake.make_move(&self.direction);
         mvprintw(self.apple.y, self.apple.x, "*");
         refresh();
+
+        self.check_if_apple_eaten();
+        self.snake.make_move(&self.direction);
 
         if(self.check_collision()){
             self.is_finished = true;
@@ -95,7 +97,14 @@ impl GameManager {
                 _ => return
             }
 
-            self.print_centered(&format!("Game over {}", self.max_x).to_string());
+            self.print_centered("Game over");
+        }
+    }
+
+    fn check_if_apple_eaten(&mut self) -> () {
+        if(self.apple.x == self.snake.cells_x[0] && self.apple.y == self.snake.cells_y[0]){
+            self.snake.add_cell();
+            self.apple = Apple::new(&self.max_x, &self.max_y);
         }
     }
 }
