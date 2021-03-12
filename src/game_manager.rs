@@ -79,7 +79,7 @@ impl GameManager {
         let head_x = self.snake.cells_x[0];
         let head_y = self.snake.cells_y[0];
 
-        if(head_x < 0 || head_y < 0 || head_x > self.max_x || head_y > self.max_y){
+        if(head_x < 0 || head_y < 0 || head_x >= self.max_x || head_y >= self.max_y){
             return true;
         }
 
