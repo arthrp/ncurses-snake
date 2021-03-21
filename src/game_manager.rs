@@ -15,7 +15,8 @@ pub struct GameManager {
     snake: Snake,
     apple: Apple,
     max_x: i32,
-    max_y: i32    
+    max_y: i32,
+    score: i32    
 }
 
 impl GameManager {
@@ -35,7 +36,8 @@ impl GameManager {
 
     pub fn new(max_x: &i32, max_y: &i32) -> GameManager {
         let apple = Apple::new(max_x, max_y);
-        return GameManager{ is_finished: false, direction: Direction::East, snake: Snake::new(3), apple: apple, max_x: max_x.clone(), max_y: max_y.clone() };
+        return GameManager{ is_finished: false, direction: Direction::East, snake: Snake::new(3), apple: apple, max_x: max_x.clone(), max_y: max_y.clone(),
+            score: 0 };
     }
 
     pub fn run_game_loop(&mut self) -> () {
@@ -68,11 +70,23 @@ impl GameManager {
         self.game_over_loop();
     }
 
-    fn print_centered(&self, msg: &str) -> () {
+    fn print_gameover_msg(&self) -> () {
         clear();
-        let pos_x = self.max_x/2 - ((msg.len()/2) as i32);
-        mvprintw(self.max_y/2, pos_x, &msg);
+        let first_row_text = "Game over";
+        let mut pos_x = self.get_centered_text_x(&self.max_x, first_row_text);
+        mvprintw(self.max_y/2, pos_x, first_row_text);
+
+        let second_row_text = format!("Score: {0}", self.score);
+        pos_x = self.get_centered_text_x(&self.max_x, second_row_text.as_str());
+        mvprintw(self.max_y/2+1, pos_x, second_row_text.as_str());
+
         refresh();
+    }
+
+    fn get_centered_text_x(&self, max_x: &i32, msg: &str) -> i32 {
+        let pos_x = *max_x/2 - ((msg.len()/2) as i32);
+
+        return pos_x;
     }
 
     fn check_collision(&self) -> bool {
@@ -97,13 +111,14 @@ impl GameManager {
                 _ => return
             }
 
-            self.print_centered("Game over");
+            self.print_gameover_msg();
         }
     }
 
     fn check_if_apple_eaten(&mut self) -> () {
         if(self.apple.x == self.snake.cells_x[0] && self.apple.y == self.snake.cells_y[0]){
             self.snake.add_cell();
+            self.score += 1;
             self.apple = Apple::new(&self.max_x, &self.max_y);
         }
     }
